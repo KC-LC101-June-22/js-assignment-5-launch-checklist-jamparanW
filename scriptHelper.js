@@ -1,8 +1,7 @@
 require('isomorphic-fetch');
 
-
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
-    document.innerHTML =`<h2>Mission Destination</h2>
+    document.innerHTML = `<h2>Mission Destination</h2>
         <ol>
             <li>Name: ${name}</li>
             <li>Diameter: ${diameter}</li>
@@ -23,34 +22,32 @@ function validateInput(testInput) {
     }
 }
 
-function formSubmission(document, list, pilot, copilot, fuelLevel, cargoMass) { 
-    if (fuelLevel > 10000 && cargoMass < 10000) {
+function formSubmission(document, list, pilot, copilot, fuelLevel, cargoMass) {
+    let fuelLevelStatus = "Fuel level high enough for launch";
+    let cargoMassStatus = "Cargo mass low enough for launch";
+    list.style.visibility = "visible";
+    if(fuelLevel >= 10000 && cargoMass <= 10000) {
         document.innerHTML = "Ready for Launch!"
         document.style.color = "green";
-        list.style.visibility = "hidden";
-    } else if (fuelLevel < 10000 || cargoMass > 10000) {
-        let fuelLevelStatus = `Fuel level high enough for launch`;
-        let cargoMassStatus = `Cargo mass low enough for launch`;
-        let pinkHighlight;
-        let pinkHighlight1;
-        if(fuelLevel < 10000){
-            fuelLevelStatus = `Fuel level too low for launch`;
-            pinkHighlight = `style="color:IndianRed"`;
-        }
-        if(cargoMass > 10000){
-            cargoMassStatus = `Cargo mass too high for launch`;
-            pinkHighlight1 = `style="color:IndianRed"`;
-        }
-        document.innerHTML = "Not Ready for Launch!"
-        document.style.color = "red";
-        list.style.visibility = "visible";
-        list.innerHTML = `<ol>
-            <li id="pilotStatus" data-testid="pilotStatus">Pilot ${pilot} Ready</li>
-            <li id="copilotStatus" data-testid="copilotStatus">Co-pilot ${copilot} Ready</li>
-            <li id="fuelStatus" data-testid="fuelStatus" ${pinkHighlight}>${fuelLevelStatus}</li>
-            <li id="cargoStatus" data-testid="cargoStatus" ${pinkHighlight1}>${cargoMassStatus}</li>
-        </ol>`;
     }
+    if (fuelLevel < 10000) {
+        document.innerHTML = "Shuttle Not Ready for Launch!";
+        fuelLevelStatus = "Fuel level too low for launch";
+        document.style.color = "Red";
+    }
+    if (cargoMass > 10000) {
+        document.innerHTML = "Shuttle Not Ready for Launch!";
+        cargoMassStatus = "Cargo mass too high for launch";
+        document.style.color = "Red";
+    }
+
+
+    list.innerHTML = `<ol>
+            <li id="pilotStatus" data-testid="pilotStatus">Pilot ${pilot} is ready for launch</li>
+            <li id="copilotStatus" data-testid="copilotStatus">Co-pilot ${copilot} is ready for launch</li>
+            <li id="fuelStatus" data-testid="fuelStatus">${fuelLevelStatus}</li>
+            <li id="cargoStatus" data-testid="cargoStatus">${cargoMassStatus}</li>
+    </ol>`;
 }
 async function myFetch() {
     const url = "https://handlers.education.launchcode.org/static/planets.json";
